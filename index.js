@@ -39,17 +39,18 @@ function handleEvent(event) {
     if (event.message.text.search("get")) {
         apis.get((err, res) => {
             if (err) throw err;
-            client.replyMessage(event.replyToken, res);
+            return client.replyMessage(event.replyToken, res);
         });
     }
-
-    // create a echoing text message
-    const echo = {
-        type: 'text',
-        text: event.message.text
-    };
-    // use reply API
-    return client.replyMessage(event.replyToken, echo);
+    else {
+        // create a echoing text message
+        const echo = {
+            type: 'text',
+            text: event.message.text
+        };
+        // use reply API
+        return client.replyMessage(event.replyToken, echo);
+    }
 }
 
 //#region Listening
