@@ -10,7 +10,7 @@ const client = new line.Client(config);
 
 // create Express app
 const app = express();
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 
 // register a webhook handler with middleware
 // about the middleware, please refer to doc
