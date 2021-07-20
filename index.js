@@ -1,15 +1,30 @@
 const line = require('@line/bot-sdk');
 const express = require('express');
+const bodyParser = require('body-parser');
+
+const router = require('./src/api/routes/todoRoute');
 const config = {
     channelAccessToken: 'vkB5D5SxgqQxP1xGeSCs7+//PyCFtx+t+bu41aiCdo3Ty8cu8NPh24/BbByGkQJ91KSuY1cOtI55EOntGm4lBQsTMe9e6Cr+K9nyDX8S+SRpfvnJjtp2eQClPl2XeyQ/n1W2WJtJzD5OVNUKH5HMtgdB04t89/1O/w1cDnyilFU=',
     channelSecret: '76a2d94b3ed2c7e0ed33d5700c1883a5'
 };
+
+// Import DB Connection
+require("./src/config/db");
 
 // create LINE SDK client
 const client = new line.Client(config);
 
 // create Express app
 const app = express();
+
+// use bodyParser middleware on express app
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+// Add endpoint
+app.get('/', (req, res) => {
+    res.send("hello world");
+})
 
 // register a webhook handler with middleware
 // about the middleware, please refer to doc
@@ -24,6 +39,8 @@ app.post('/callback', line.middleware(config), (req, res) => {
         });
 });
 
+
+
 // event handler
 function handleEvent(event) {
     if (event.type !== 'message' || event.message.type !== 'text') {
@@ -32,6 +49,7 @@ function handleEvent(event) {
     }
 
     if (event.message.text == 'ls') {
+
         const echo = {
             type: 'text',
             text: 'show todo list'
