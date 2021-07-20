@@ -44,25 +44,24 @@ app.post('/callback', line.middleware(config), (req, res) => {
 // event handler
 function handleEvent(event) {
     if (event.type !== 'message' || event.message.type !== 'text') {
+        console.log("hohohohohoohhohohohohoohhohohohohoohhohohohohoohhohohohohoohhohohohohooh");
         // ignore non-text-message event
         return Promise.resolve(null);
     }
 
-    if (event.message.text == 'ls') {
-        const echo = {
-            type: 'text',
-            text: 'show todo list'
-        };
-        return client.replyMessage(event.replyToken, echo);
-    }
+    // if (event.message.text == 'ls') {
+    //     const echo = {
+    //         type: 'text',
+    //         text: 'show todo list'
+    //     };
+    //     return client.replyMessage(event.replyToken, echo);
+    // }
     else {
-        console.log("11111111111111111111111111111111111111111111111111");
         // create a echoing text message
         const echo = {
             type: 'text',
             text: event.message.text
         };
-        console.log("22222222222222222222222222222222222222222222222222");
         // use reply API
         return client.replyMessage(event.replyToken, echo);
     }
