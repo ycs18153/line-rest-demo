@@ -7,21 +7,10 @@ const config = {
 };
 
 // create LINE SDK client
-// const client = new line.Client(config);
+const client = new line.Client(config);
 
 // create Express app
 const app = express();
-
-// handle webhook
-app.post('/', lineBotParser);
-
-// Routes
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, console.log(`Ninja Hattori is running on port ${PORT}`))
-
-/* Help messages */
-const helpingMessage = '';
-
 
 // register a webhook handler with middleware
 // about the middleware, please refer to doc
