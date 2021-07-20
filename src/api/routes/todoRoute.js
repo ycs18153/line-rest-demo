@@ -22,9 +22,9 @@ mongoClient.connect(url, (err, client) => {
  * Post Method
  * Note: the sample request is provided above (region).   
  */
-router.post('/comments', (req, res) => {
+router.post('/todo', (req, res) => {
     console.log(req.body); //your json
-    db.collection('comments').save(req.body, (err, result) => {
+    db.collection('todoList').save(req.body, (err, result) => {
         if (err) return console.log(err);
         console.log('saved to mongoDB');
         res.send(req.body);
@@ -32,8 +32,8 @@ router.post('/comments', (req, res) => {
 })
 
 /* Get Method */
-router.get('/comments', (req, res) => {
-    db.collection('comments').find().toArray((err, result) => {
+router.get('/todo', (req, res) => {
+    db.collection('todoList').find().toArray((err, result) => {
         if (err) throw err;
         console.log('GET successful!');
         res.send({ data: result });
@@ -41,10 +41,10 @@ router.get('/comments', (req, res) => {
 })
 
 /* Delete Method */
-router.delete('/comments/:id', (req, res) => {
+router.delete('/todo/:id', (req, res) => {
     // use _id need use ObjectID(value)
     const obj = { _id: ObjectID(req.params.id) };
-    db.collection('comments').remove(obj, (err, result) => {
+    db.collection('todoList').remove(obj, (err, result) => {
         if (err) throw err;
         console.log('1 document deleted');
         res.send('delete success');
@@ -52,11 +52,11 @@ router.delete('/comments/:id', (req, res) => {
 })
 
 /* Put Method */
-router.put('/comments/:id', (req, res) => {
+router.put('/todo/:id', (req, res) => {
     console.log(req.params.id, req.body);
     const newvalues = { $set: req.body };
     const obj = { _id: ObjectID(req.params.id) };
-    db.collection('comments').updateOne(obj, newvalues, (err, result) => {
+    db.collection('todoList').updateOne(obj, newvalues, (err, result) => {
         if (err) throw err;
         console.log("1 document update");
         res.send('update success');
