@@ -3,9 +3,9 @@ const mongoClient = require('mongodb').MongoClient;
 const bodyParser = require('body-parser');
 const ObjectID = require('mongodb').ObjectID;
 
-const router = express.Router();
+const router = express();
 
-const port = 3000;
+const port = 8000;
 router.use(bodyParser.json());
 
 const url = 'mongodb+srv://admin:admin@cluster0.gitsk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
