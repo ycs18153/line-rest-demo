@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/ycs18153/line-rest-demo#readme",
   "dependencies": {
+    "@line/bot-sdk": "^7.3.0",
     "body-parse": "^0.1.0",
     "express": "^4.17.1"
   }
