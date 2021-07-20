@@ -1,4 +1,3 @@
-const apis = require('./restAPI');
 const line = require('@line/bot-sdk');
 var express = require('express');
 const mongoClient = require('mongodb').MongoClient;
@@ -36,21 +35,13 @@ function handleEvent(event) {
         // ignore non-text-message event
         return Promise.resolve(null);
     }
-    if (event.message.text.search("get")) {
-        apis.get((err, res) => {
-            if (err) throw err;
-            return client.replyMessage(event.replyToken, res);
-        });
-    }
-    else {
-        // create a echoing text message
-        const echo = {
-            type: 'text',
-            text: event.message.text
-        };
-        // use reply API
-        return client.replyMessage(event.replyToken, echo);
-    }
+    // create a echoing text message
+    const echo = {
+        type: 'text',
+        text: event.message.text
+    };
+    // use reply API
+    return client.replyMessage(event.replyToken, echo);
 }
 
 //#region Listening
