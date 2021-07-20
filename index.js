@@ -39,7 +39,7 @@ function handleEvent(event) {
     if (event.message.text.search("get")) {
         apis.get((err, res) => {
             if (err) throw err;
-            client.replyMessage(res);
+            client.replyMessage(event.replyToken, res);
         });
     }
 
