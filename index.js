@@ -9,7 +9,7 @@ const config = {
 };
 
 // Import DB Connection
-require("./src/config/db");
+// require("./src/config/db");
 
 // create LINE SDK client
 const client = new line.Client(config);
