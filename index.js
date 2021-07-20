@@ -31,16 +31,19 @@ function handleEvent(event) {
         return Promise.resolve(null);
     }
 
-    // create a echoing text message
-    const echo = {
-        type: 'text',
-        text: event.message.text
-    };
-
-    if (echo.text.search("ls")) {
-        return client.replyMessage(event.replyMessage, "show todo list");
+    if (event.message.text == 'ls') {
+        const echo = {
+            type: 'text',
+            text: 'show todo list'
+        };
+        return client.replyMessage(event.replyToken, echo);
     }
     else {
+        // create a echoing text message
+        const echo = {
+            type: 'text',
+            text: event.message.text
+        };
         // use reply API
         return client.replyMessage(event.replyToken, echo);
     }
