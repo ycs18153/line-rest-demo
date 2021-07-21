@@ -58,6 +58,6 @@ app.listen(port, () => {
         if (err) return console.log(err);
         database = client.db('myFirstDatabase');
         collection = database.collection('todoList');
-        console.log(`Connect to ${database}, and collection here is ${collection}`);
+        console.log(`Connect to ${database}, and the collection here is ${collection}`);
     })
 });
