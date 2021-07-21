@@ -46,7 +46,7 @@ function handleEvent(event) {
     // create a echoing text message
     const echo = {
         type: 'text',
-        text: event.message.text + ' ' + collection
+        text: event.message.text + ' ' + JSON.stringify(collection)
     };
 
     // use reply API
@@ -60,6 +60,6 @@ app.listen(port, () => {
         if (err) return console.log(err);
         database = client.db('myFirstDatabase');
         collection = database.collection('todoList');
-        console.log('Connect to ' + database + ', and the collection here is ' + collection);
+        console.log(`Connect to ${JSON.stringify(database)}, and the collection here is ${JSON.stringify(collection)}`);
     })
 });
