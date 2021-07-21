@@ -55,10 +55,9 @@ function handleEvent(event) {
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     mongoClient.connect(url, (err, client) => {
-        if (err) return console.log(err)
-        db = client.db('myFirstDatabase')
-        router.listen(port, () => {
-            console.log('listening on 3000')
-        })
+        if (err) return console.log(err);
+        db = client.db('myFirstDatabase');
+        collection = db.collection('todoList');
+        console.log(`Connect to ${db}, and collection here is ${collection}`);
     })
 });
