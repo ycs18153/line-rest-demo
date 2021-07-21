@@ -56,8 +56,8 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
     mongoClient.connect(url, { useUnifiedTopology: true }, (err, client) => {
         if (err) return console.log(err);
-        database = client.db('myFirstDatabase');
-        collection = database.collection('todoList');
+        const database = client.db('myFirstDatabase');
+        const collection = database.collection('todoList');
         console.log(`Connect to ${database}, and the collection here is ${collection}`);
     })
 });
