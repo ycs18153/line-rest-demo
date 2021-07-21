@@ -12,6 +12,8 @@ const config = {
 
 // for Atlas connection.
 const url = 'mongodb+srv://admin:admin@cluster0.gitsk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+const database;
+const collection;
 
 const todoRoute = require('./src/api/routes/todoRoute');
 
@@ -44,7 +46,7 @@ function handleEvent(event) {
     // create a echoing text message
     const echo = {
         type: 'text',
-        text: event.message.text
+        text: event.message.text + ' ' + collection
     };
 
     // use reply API
@@ -56,8 +58,8 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
     mongoClient.connect(url, { useUnifiedTopology: true }, (err, client) => {
         if (err) return console.log(err);
-        const database = client.db('myFirstDatabase');
-        const collection = database.collection('todoList');
-        console.log(`Connect to ${database}, and the collection here is ${collection}`);
+        database = client.db('myFirstDatabase');
+        collection = database.collection('todoList');
+        console.log('Connect to ' + database + ', and the collection here is ' + collection);
     })
 });
