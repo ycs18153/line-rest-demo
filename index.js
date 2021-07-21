@@ -12,8 +12,8 @@ const config = {
 
 // for Atlas connection.
 const url = 'mongodb+srv://admin:admin@cluster0.gitsk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
-const database;
-const collection;
+var database;
+var collection;
 
 const todoRoute = require('./src/api/routes/todoRoute');
 
