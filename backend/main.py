@@ -23,6 +23,10 @@ app.include_router(todo_router, tags=["tasks"], prefix="/task")
 
 
 if __name__ == "__main__":
+    print("=======================================")
+    print("HOST: " + settings.HOST)
+    print("PORT: " + str(settings.PORT))
+    print("=======================================")
     uvicorn.run(
         "main:app",
         host=settings.HOST,

@@ -59,7 +59,9 @@ def handle_message(event):
         except:
             line_bot_api.reply_message(
                 event.reply_token, TextSendMessage(text="something wents wrong, please retry..."))
-    # elif "update task" in event.message.text:
+    elif "update task" in event.message.text:
+        line_bot_api.reply_message(
+            event.reply_token, TextSendMessage(text="soorry about that, I'm still working on it.."))
     #     try:
     #         taskID = event.message.text.split("task")[1].strip()
     #         requests.put("http://localhost:8000/task/%s" % taskID, )
@@ -92,7 +94,7 @@ def handle_message(event):
             response = requests.get("http://localhost:8000/task/")
             res = ""
             for item in response.json():
-                res += item['_id'] + '\n'
+                res += '*' + item['_id'] + '\n'
             line_bot_api.reply_message(
                 event.reply_token, TextSendMessage(text=res))
         except:
