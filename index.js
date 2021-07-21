@@ -54,10 +54,10 @@ function handleEvent(event) {
 // listen on port
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-    mongoClient.connect(url, (err, client) => {
+    mongoClient.connect(url, { useUnifiedTopology: true }, (err, client) => {
         if (err) return console.log(err);
-        db = client.db('myFirstDatabase');
-        collection = db.collection('todoList');
-        console.log(`Connect to ${db}, and collection here is ${collection}`);
+        database = client.db('myFirstDatabase');
+        collection = database.collection('todoList');
+        console.log(`Connect to ${database}, and collection here is ${collection}`);
     })
 });
