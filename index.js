@@ -2,12 +2,18 @@
 
 const line = require('@line/bot-sdk');
 const express = require('express');
+const mongoClient = require('mongodb').MongoClient;
 
 // create LINE SDK config from env variables
 const config = {
     channelAccessToken: 'vkB5D5SxgqQxP1xGeSCs7+//PyCFtx+t+bu41aiCdo3Ty8cu8NPh24/BbByGkQJ91KSuY1cOtI55EOntGm4lBQsTMe9e6Cr+K9nyDX8S+SRpfvnJjtp2eQClPl2XeyQ/n1W2WJtJzD5OVNUKH5HMtgdB04t89/1O/w1cDnyilFU=',
     channelSecret: '76a2d94b3ed2c7e0ed33d5700c1883a5'
 };
+
+// for Atlas connection.
+const url = 'mongodb+srv://admin:admin@cluster0.gitsk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+
+const todoRoute = require('./src/api/routes/todoRoute');
 
 // create LINE SDK client
 const client = new line.Client(config);
@@ -36,7 +42,10 @@ function handleEvent(event) {
     }
 
     // create a echoing text message
-    const echo = { type: 'text', text: event.message.text };
+    const echo = {
+        type: 'text',
+        text: event.message.text
+    };
 
     // use reply API
     return client.replyMessage(event.replyToken, echo);
@@ -45,5 +54,11 @@ function handleEvent(event) {
 // listen on port
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-    console.log(`listening on ${port}`);
+    mongoClient.connect(url, (err, client) => {
+        if (err) return console.log(err)
+        db = client.db('myFirstDatabase')
+        router.listen(port, () => {
+            console.log('listening on 3000')
+        })
+    })
 });
