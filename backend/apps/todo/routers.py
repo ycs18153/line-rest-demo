@@ -7,7 +7,7 @@ from .models import TaskModel, UpdateTaskModel
 router = APIRouter()
 
 
-@router.post("/", response_description="Add new task")
+@router.post("/task", response_description="Add new task")
 async def create_task(request: Request, task: TaskModel = Body(...)):
     task = jsonable_encoder(task)
     new_task = await request.app.mongodb["tasks"].insert_one(task)
@@ -18,7 +18,7 @@ async def create_task(request: Request, task: TaskModel = Body(...)):
     return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_task)
 
 
-@router.get("/", response_description="List all tasks")
+@router.get("/task", response_description="List all tasks")
 async def list_tasks(request: Request):
     tasks = []
     for doc in await request.app.mongodb["tasks"].find().to_list(length=100):
@@ -26,7 +26,7 @@ async def list_tasks(request: Request):
     return tasks
 
 
-@router.get("/{id}", response_description="Get a single task")
+@router.get("/task/{id}", response_description="Get a single task")
 async def show_task(id: str, request: Request):
     if (task := await request.app.mongodb["tasks"].find_one({"_id": id})) is not None:
         return task
@@ -34,7 +34,7 @@ async def show_task(id: str, request: Request):
     raise HTTPException(status_code=404, detail=f"Task {id} not found")
 
 
-@router.put("/{id}", response_description="Update a task")
+@router.put("/task/{id}", response_description="Update a task")
 async def update_task(id: str, request: Request, task: UpdateTaskModel = Body(...)):
     task = {k: v for k, v in task.dict().items() if v is not None}
 
@@ -57,7 +57,7 @@ async def update_task(id: str, request: Request, task: UpdateTaskModel = Body(..
     raise HTTPException(status_code=404, detail=f"Task {id} not found")
 
 
-@router.delete("/{id}", response_description="Delete Task")
+@router.delete("/task/{id}", response_description="Delete Task")
 async def delete_task(id: str, request: Request):
     delete_result = await request.app.mongodb["tasks"].delete_one({"_id": id})
 

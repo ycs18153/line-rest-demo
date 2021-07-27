@@ -19,7 +19,7 @@ async def shutdown_db_client():
     app.mongodb_client.close()
 
 
-app.include_router(todo_router, tags=["tasks"], prefix="/task")
+app.include_router(todo_router, tags=["api"], prefix="/api")
 
 
 if __name__ == "__main__":
