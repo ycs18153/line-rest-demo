@@ -50,7 +50,7 @@ helpMessage = "`create task <task_name>` to create a task.\n" \
 def handle_message(event):
     if "read tasks" in event.message.text:
         try:
-            response = requests.get("http://localhost:8000/task/")
+            response = requests.get("http://localhost:8000/api/task/")
             res = ""
             for item in response.json():
                 res += '*' + item['name'] + '\n'
@@ -64,7 +64,7 @@ def handle_message(event):
             event.reply_token, TextSendMessage(text="soorry about that, I'm still working on it.."))
     #     try:
     #         taskID = event.message.text.split("task")[1].strip()
-    #         requests.put("http://localhost:8000/task/%s" % taskID, )
+    #         requests.put("http://localhost:8000/api/task/%s" % taskID, )
 
     #     except:
     #         line_bot_api.reply_message(
@@ -72,7 +72,7 @@ def handle_message(event):
     elif "delete task" in event.message.text:
         try:
             taskID = event.message.text.split("task")[1].strip()
-            requests.delete("http://localhost:8000/task/%s" % taskID)
+            requests.delete("http://localhost:8000/api/task/%s" % taskID)
             line_bot_api.reply_message(
                 event.reply_token, TextSendMessage(text="delete success!"))
         except:
@@ -82,7 +82,7 @@ def handle_message(event):
     elif "create task" in event.message.text:
         try:
             taskName = event.message.text.split("task")[1].strip()
-            requests.post("http://localhost:8000/task/",
+            requests.post("http://localhost:8000/api/task/",
                           json={"name": taskName})
             line_bot_api.reply_message(
                 event.reply_token, TextSendMessage(text="create success!"))
@@ -91,7 +91,7 @@ def handle_message(event):
                 event.reply_token, TextSendMessage(text="something wents wrong, please retry..."))
     elif "get id" in event.message.text:
         try:
-            response = requests.get("http://localhost:8000/task/")
+            response = requests.get("http://localhost:8000/api/task/")
             res = ""
             for item in response.json():
                 res += '*' + item['_id'] + '\n'
