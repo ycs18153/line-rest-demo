@@ -3,13 +3,18 @@ import os
 from flask import Flask, request, abort
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
-from linebot.models import MessageEvent, TextMessage, TextSendMessage
-
+from linebot.models import (MessageEvent, TextMessage,
+                            TextSendMessage, TemplateSendMessage, FlexSendMessage, ConfirmTemplate, URIAction, MessageAction, PostbackEvent)
 import configparser
+from linebot.models.events import Postback
 import requests
 import random
-
+import json
+import logging
+import datetime
+import copy
 from requests.exceptions import SSLError
+from magicMessage.carousel import todo, new_info
 
 app = Flask(__name__)
 
@@ -39,72 +44,65 @@ def callback():
     return 'OK'
 
 
-helpMessage = "`create task <task_name>` to create a task.\n" \
-    + "`read tasks` to get all the tasks you created.\n" \
-    + "`update task <task_id>` to update the content of the task.\n" \
-    + "`delete task <task_id>` to remove the task.\n" \
+helpMessage = "`create` to create a task.\n" \
+    + "`read` to get all the tasks you created.\n" \
+    + "`update <todo_id>` to update the content of the task.\n" \
+    + "`delete <todo_id>` to remove the task.\n" \
     + "`get id` to get the task's ID for operations later."
+
+
+@handler.add(PostbackEvent)
+def postbackReply(event):
+    data = event.postback.data
+    print(data)
 
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    if "read tasks" in event.message.text:
+    if "read" in event.message.text:
         try:
-            response = requests.get("http://localhost:8000/api/task/")
-            res = ""
-            for item in response.json():
-                res += '*' + item['name'] + '\n'
-            line_bot_api.reply_message(
-                event.reply_token, TextSendMessage(text=res))
-        except:
-            line_bot_api.reply_message(
-                event.reply_token, TextSendMessage(text="something wents wrong, please retry..."))
-    elif "update task" in event.message.text:
-        line_bot_api.reply_message(
-            event.reply_token, TextSendMessage(text="soorry about that, I'm still working on it.."))
-    #     try:
-    #         taskID = event.message.text.split("task")[1].strip()
-    #         requests.put("http://localhost:8000/api/task/%s" % taskID, )
+            response = requests.get(
+                f'https://tsmcbot-404notfound.du.r.appspot.com/api/todo/{event.source.user_id}', timeout=5)
+            each_todo = response.json()
+            todo_copy = {}
+            todo_copy = copy.deepcopy(todo)
 
-    #     except:
-    #         line_bot_api.reply_message(
-    #             event.reply_token, TextSendMessage(text="something wents wrong, please retry..."))
-    elif "delete task" in event.message.text:
-        try:
-            taskID = event.message.text.split("task")[1].strip()
-            requests.delete("http://localhost:8000/api/task/%s" % taskID)
-            line_bot_api.reply_message(
-                event.reply_token, TextSendMessage(text="delete success!"))
-        except:
+            for i in range(len(each_todo)):
+                new_info_copy = {}
+                new_info_copy = copy.deepcopy(new_info)
+                new_info_copy["header"]["contents"][1]["text"] = each_todo[i]["todo_id"]
+                new_info_copy["body"]["contents"][0]["contents"][1]["text"] = each_todo[i]["todo_name"]
+                new_info_copy["body"]["contents"][1]["contents"][1]["text"] = each_todo[i]["todo_date"][5:10] + \
+                    " "+each_todo[i]["todo_date"][11:16]
+                new_info_copy["body"]["contents"][2]["contents"][1]["text"] = each_todo[i]["todo_contents"]
+                new_info_copy["body"]["contents"][3]["contents"][1]["text"] = str(
+                    each_todo[i]["todo_update_date"])
+                new_info_copy["body"]["contents"][4]["contents"][1]["text"] = str(
+                    each_todo[i]["todo_completed"])
+                todo_copy["contents"].append(new_info_copy)
+            message = FlexSendMessage(alt_text="todo list", contents=todo_copy)
+            line_bot_api.reply_message(event.reply_token, message)
+
+        except Exception as e:
+            logging.error('Error Msg: ',  exc_info=e)
             line_bot_api.reply_message(
                 event.reply_token, TextSendMessage(text="something wents wrong, please retry..."))
 
-    elif "create task" in event.message.text:
+    elif "delete" in event.message.text:
         try:
-            taskName = event.message.text.split("task")[1].strip()
-            requests.post("http://localhost:8000/api/task/",
-                          json={"name": taskName})
+            todo_id = event.message.text.split(" ")[1].strip()
+            requests.delete(
+                f'https://tsmcbot-404notfound.du.r.appspot.com/api/todo/{event.source.user_id}/{todo_id}')
+            response = requests.get(
+                f'https://tsmcbot-404notfound.du.r.appspot.com/api/todo/{event.source.user_id}')
             line_bot_api.reply_message(
-                event.reply_token, TextSendMessage(text="create success!"))
+                event.reply_token, TextSendMessage(text=f'delete success!\n{str(response.json())}'))
         except:
             line_bot_api.reply_message(
                 event.reply_token, TextSendMessage(text="something wents wrong, please retry..."))
-    elif "get id" in event.message.text:
-        try:
-            response = requests.get("http://localhost:8000/api/task/")
-            res = ""
-            for item in response.json():
-                res += '*' + item['_id'] + '\n'
-            line_bot_api.reply_message(
-                event.reply_token, TextSendMessage(text=res))
-        except:
-            line_bot_api.reply_message(
-                event.reply_token, TextSendMessage(text="something wents wrong, please retry..."))
-    elif "help" in event.message.text:
+    elif "test" in event.message.text:
         line_bot_api.reply_message(
-            event.reply_token, TextSendMessage(text=helpMessage))
-    # else:
-        #line_bot_api.reply_message(event.reply_token, TextSendMessage(text=event.message.text))
+            event.reply_token, TextSendMessage(text="test"))
 
 
 if __name__ == "__main__":
